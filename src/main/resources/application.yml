@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: kakaotalkchatuploader
+  profiles:
+    active: local
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "local"
+    import:
+      - classpath:config/local/config.yml
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+    import:
+      - classpath:config/dev/config.yml

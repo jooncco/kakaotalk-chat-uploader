@@ -1,0 +1,9 @@
+kakaotalk:
+  fileStore:
+    path: src/main/resources/dump
+
+aws:
+  s3:
+    region: ap-northeast-2
+    bucketName: gsglobal-prototyping-kakao
+    prefix: raw/
