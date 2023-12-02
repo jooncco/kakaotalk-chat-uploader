@@ -1,6 +1,6 @@
 package dev.jooncco.kakaotalkchatuploader.service;
 
-import java.time.LocalDateTime;
-
 public interface ChatFileService {
+
+    void parseAndUploadFilesToAmazonS3(String sourceFilePath, long minutes);
 }

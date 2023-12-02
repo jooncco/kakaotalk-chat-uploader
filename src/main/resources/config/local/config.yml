@@ -1,6 +1,6 @@
 kakaotalk:
   fileStore:
-    path: src/main/resources/dump
+    path: src/main/resources/chat
 
 aws:
   s3:

@@ -3,19 +3,28 @@ package dev.jooncco.kakaotalkchatuploader.intf.aws.service;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 
+import dev.jooncco.kakaotalkchatuploader.constants.CommonConstants;
 import dev.jooncco.kakaotalkchatuploader.intf.aws.provider.S3ClientProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import dev.jooncco.kakaotalkchatuploader.utility.DateTimeUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import static dev.jooncco.kakaotalkchatuploader.constants.CommonConstants.S3_UPLOAD_DATETIME_FORMAT;
+import static dev.jooncco.kakaotalkchatuploader.constants.CommonConstants.S3_UPLOAD_SEQUENCE_FORMAT;
 
 @Slf4j
 @Service
@@ -28,44 +37,28 @@ public class S3ServiceImpl implements S3Service {
     private final S3ClientProvider amazonS3ClientProvider;
 
     /**
-     * 인자로 받은 파일들을 S3 bucket 에 업로드 합니다. deleteOnFail argument 를 통해 업로드 실패한 파일을 삭제할지 제어할 수 있습니다.
+     * Upload a file to S3 bucket.
      *
-     * @param files
-     * @param deleteOnFail
+     * @param file
      */
     @Override
-    public void uploadFiles(List<File> files, boolean deleteOnFail) {
+    public void uploadFile(File file) {
         AmazonS3Client s3Client = amazonS3ClientProvider.getClient();
 
-        for (File file : files) {
-            try {
-                s3Client.putObject(s3BucketName, getDeviceStatObjectKey(file), file);
-                log.debug("Uploaded: {}", file.getName());
-            } catch (SdkClientException ex) {
-                log.error("Failed to upload: {}", file.getName(), ex);
-                if (deleteOnFail) {
-                    try {
-                        Files.delete(file.toPath());
-                        log.info("Deleted file: {}", file.getName());
-                    } catch (IOException ignored) {
-                        log.info("Failed to delete file: {}", file.getName());
-                    }
-                }
-            }
+        try {
+            s3Client.putObject(s3BucketName, file.getName(), file);
+            log.debug("Uploaded: {}", file.getName());
+        } catch (SdkClientException ex) {
+            log.error("Failed to upload: " + file.getName(), ex);
         }
     }
 
-    private String getDeviceStatObjectKey(File file) {
-        final int TIMESTAMP_LEN = 8;
-        String yyyyMMdd;
-        Pattern pattern = Pattern.compile("^([0-9]{8}).*");
-        Matcher matcher = pattern.matcher(file.getName());
-        if (matcher.find()) {
-            yyyyMMdd = matcher.group(1);
-        } else {
-            yyyyMMdd = file.getName().substring(0, TIMESTAMP_LEN);
-        }
-        return Paths.get("deviceStat", file.getParentFile().getName(), yyyyMMdd, file.getName())
-                .toString();
+    @Override
+    public String generateAmazonS3ObjectKey(String openChatTitle, LocalDateTime dateTime, int sequence) {
+        String dateTimeString= DateTimeUtility.getFormattedString(dateTime, S3_UPLOAD_DATETIME_FORMAT);
+        return openChatTitle + "_"
+                + dateTimeString + "_"
+                + String.format(S3_UPLOAD_SEQUENCE_FORMAT, sequence)
+                + "." + CommonConstants.FileExtension.TEXT.getSlug();
     }
 }
