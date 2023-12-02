@@ -12,6 +12,9 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
-# VS Code
+# IDE
 .vscode/
+.idea/
 
+# Chat dump files
+src/main/resources/chat/*
