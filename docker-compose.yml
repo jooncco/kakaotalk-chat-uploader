@@ -20,4 +20,4 @@ services:
 networks:
   default:
     external:
-      name: gsglobal
+      name: kakaotalk-chat-uploader

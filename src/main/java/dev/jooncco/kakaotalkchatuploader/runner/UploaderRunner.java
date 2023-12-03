@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UploaderRunner implements ApplicationRunner {
 
-    @Value("${kakaotalk.fileStore.sourceFilePath}")
+    @Value("${sourceFilePath}")
     private String sourceFilePath;
 
-    @Value("${kakaotalk.fileStore.minutes}")
+    @Value("${minutes}")
     private long minutes;
 
     private final ChatFileService chatFileService;

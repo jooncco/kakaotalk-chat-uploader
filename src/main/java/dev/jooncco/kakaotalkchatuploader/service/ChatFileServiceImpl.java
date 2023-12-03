@@ -34,7 +34,8 @@ public class ChatFileServiceImpl implements ChatFileService {
             String firstLine= reader.readLine();
             String title= firstLine.substring(0, firstLine.indexOf(OpenChat.TITLE_SUFFIX))
                     .strip()
-                    .replace('/', '∕');
+                    .replace('/', '∕')
+                    .replace(' ', ' ');
 
             String line;
             do { // skip dump file meta data

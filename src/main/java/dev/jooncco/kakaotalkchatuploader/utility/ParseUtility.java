@@ -38,7 +38,8 @@ public class ParseUtility {
         if (line == null || !line.startsWith("[") || !line.contains("]")) return null;
         int from= line.indexOf('[')+1;
         int to= line.indexOf(']');
-        return line.substring(from, to);
+        return line.substring(from, to)
+                .replace('/', '∕');
     }
 
     public static String parseSentence(String line) {

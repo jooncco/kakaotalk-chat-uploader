@@ -5,5 +5,5 @@ kakaotalk:
 aws:
   s3:
     region: ap-northeast-2
-    bucketName: gsglobal-prototyping-kakao
+    bucketName: test-bucket
     prefix: raw/
