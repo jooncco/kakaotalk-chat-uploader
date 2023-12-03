@@ -15,6 +15,3 @@ bin/
 # IDE
 .vscode/
 .idea/
-
-# Chat dump files
-src/main/resources/chat/*
